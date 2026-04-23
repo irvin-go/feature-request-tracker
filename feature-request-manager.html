@@ -177,14 +177,18 @@
                     status: r.status || 'pending'
                 }));
                 
-                // Restore any local status changes
+                // Restore any local status changes (only if explicitly set before)
                 const savedStatuses = JSON.parse(localStorage.getItem('fr_statuses') || '{}');
-                allRequests.forEach(r => {
-                    if (savedStatuses[r.id]) {
-                        r.status = savedStatuses[r.id];
-                        r.productTeamNote = savedStatuses[r.id + '_note'] || r.productTeamNote;
-                    }
-                });
+                const hasJsonStatus = allRequests.some(r => r.status && r.status !== 'pending');
+                // Only use localStorage if JSON didn't have proper statuses
+                if (!hasJsonStatus) {
+                    allRequests.forEach(r => {
+                        if (savedStatuses[r.id]) {
+                            r.status = savedStatuses[r.id];
+                            r.productTeamNote = savedStatuses[r.id + '_note'] || r.productTeamNote;
+                        }
+                    });
+                }
                 
                 updateStats();
                 renderRequests();
