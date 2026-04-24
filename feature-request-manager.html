@@ -3,9 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Feature Request Manager - Tracker</title>
+    <title>Feature Request Manager</title>
     <link rel="stylesheet" href="https://designsaplus.com/cdn/design-system.css">
     <style>
+        :root {
+            --navy: #273c91;
+            --coral: #ec634b;
+            --coral-dark: #d26f5e;
+            --blue-accent: #3478f6;
+            --sky-blue: #35a7e7;
+            --white: #fff;
+            --light-blue: #e9f1fe;
+            --cream: #fef8ea;
+            --text-dark: #0b1023;
+            --text-muted: rgba(11,16,35,0.8);
+            --text-light: rgba(11,16,35,0.64);
+            --radius: 10px;
+            --shadow: 0 2px 12px rgba(39,60,145,0.10);
+        }
+        * { box-sizing: border-box; }
+        body { font-family: Arial,sans-serif; background: #f0f4fa; color: var(--text-dark); margin: 0; }
         .tw-hidden { display: none !important; }
         .flex { display: flex; }
         .flex-1 { flex: 1 1 0%; }
@@ -23,9 +40,10 @@
         .mb-2 { margin-bottom: 0.5rem; }
         .mb-3 { margin-bottom: 0.75rem; }
         .mb-4 { margin-bottom: 1rem; }
-        .mb-5 { margin-bottom: 1.5rem; }
         .mt-1 { margin-top: 0.25rem; }
+        .mt-2 { margin-top: 0.5rem; }
         .mt-3 { margin-top: 0.75rem; }
+        .mt-4 { margin-top: 1rem; }
         .me-2 { margin-inline-end: 0.5rem; }
         .p-3 { padding: 0.75rem; }
         .p-4 { padding: 1rem; }
@@ -34,6 +52,7 @@
         .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
         .py-5 { padding-top: 1.5rem; padding-bottom: 1.5rem; }
         .h2 { font-size: 1.5rem; font-weight: 700; line-height: 1.2; }
+        .h3 { font-size: 1.25rem; font-weight: 700; line-height: 1.3; }
         .h4 { font-size: 1.125rem; font-weight: 600; line-height: 1.3; }
         .h5 { font-size: 1rem; font-weight: 600; line-height: 1.3; }
         .fw-medium { font-weight: 500; }
@@ -41,478 +60,902 @@
         .text-body-s { font-size: 0.875rem; }
         .text-body-xs { font-size: 0.75rem; }
         .text-center { text-align: center; }
-        .text-muted { color: #6b7280; }
-        .text-primary { color: #273c91; }
+        .text-muted { color: var(--text-muted); }
+        .text-primary { color: var(--navy); }
         .text-success { color: #16a34a; }
         .text-danger { color: #dc2626; }
         .text-warning { color: #d97706; }
         .text-info { color: #0891b2; }
-        .bg-background { background-color: #f0f4fa; }
-        .bg-white { background-color: #fff; }
-        .bg-green-100 { background-color: #f0fdf4; }
+        .bg-white { background-color: var(--white); }
         .w-full { width: 100%; }
         .cursor-pointer { cursor: pointer; }
         .overflow-hidden { overflow: hidden; }
         .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .min-w-0 { min-width: 0; }
         .flex-wrap { flex-wrap: wrap; }
-        .flex-shrink-0 { flex-shrink: 0; }
         .max-w-screen-md { max-width: 768px; }
         .text-sm { font-size: 0.875rem; }
+
+        /* Layout */
+        .page-wrapper { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem; }
+        .sidebar-topbar-content-offset { min-height: 100vh; }
+
+        /* Cards */
+        .tw-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(39,60,145,0.06);
+        }
+        .stat-btn { background: var(--white); border-radius: var(--radius); border: 2px solid transparent; transition: border-color 0.15s, transform 0.1s; }
+        .stat-btn:hover { border-color: rgba(39,60,145,0.2); transform: translateY(-1px); }
+        .stat-btn.active { border-color: var(--coral) !important; }
+
+        /* Badges */
+        .badge {
+            display: inline-flex; align-items: center; gap: 0.25rem;
+            padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.72rem; font-weight: 600;
+        }
+        .badge-warning-subtle { background: #fef3c7; color: #92400e; }
+        .badge-success-subtle { background: #d1fae5; color: #065f46; }
+        .badge-danger-subtle { background: #fee2e2; color: #991b1b; }
+        .badge-info { background: #dbeafe; color: #1e40af; }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex; align-items: center; gap: 0.4rem;
+            padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.875rem; font-weight: 600;
+            border: none; cursor: pointer; transition: background 0.15s, transform 0.1s;
+            text-decoration: none; white-space: nowrap;
+        }
+        .btn:hover { transform: translateY(-1px); }
+        .btn:active { transform: translateY(0); }
+        .btn-primary { background: var(--coral); color: white; }
+        .btn-primary:hover { background: var(--coral-dark); }
+        .btn-secondary { background: var(--light-blue); color: var(--navy); }
+        .btn-secondary:hover { background: #d4e7fd; }
+        .btn-success { background: #10b981; color: white; }
+        .btn-success:hover { background: #059669; }
+        .btn-danger { background: #dc2626; color: white; }
+        .btn-danger:hover { background: #b91c1c; }
+        .btn-ghost { background: transparent; color: var(--text-muted); border: 1px solid #e5e7eb; }
+        .btn-ghost:hover { background: #f9fafb; }
+        .btn-sm { padding: 0.35rem 0.75rem; font-size: 0.8rem; }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+        /* Forms */
+        .form-control {
+            width: 100%; padding: 0.6rem 0.85rem; border: 1.5px solid #e5e7eb;
+            border-radius: 8px; font-size: 0.875rem; font-family: inherit;
+            transition: border-color 0.15s; outline: none;
+        }
+        .form-control:focus { border-color: var(--blue-accent); }
+        label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--navy); margin-bottom: 0.35rem; }
+
+        /* Toast */
+        .toast-container { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 9999; display: flex; flex-direction: column; gap: 0.5rem; }
+
+        /* Banner */
+        .manual-banner {
+            display: flex; align-items: flex-start; gap: 0.75rem;
+            padding: 0.85rem 1rem; border-radius: 8px; margin-top: 0.75rem;
+            font-size: 0.82rem; line-height: 1.5;
+        }
+        .manual-banner.warning { background: #fffbeb; border: 1px solid #fcd34d; color: #92400e; }
+        .manual-banner.info { background: var(--light-blue); border: 1px solid #93c5fd; color: #1e40af; }
+        .manual-banner.dismissible { position: relative; }
+        .banner-dismiss {
+            position: absolute; top: 0.5rem; right: 0.5rem;
+            background: none; border: none; cursor: pointer; font-size: 1rem;
+            color: inherit; opacity: 0.6; line-height: 1;
+        }
+        .banner-dismiss:hover { opacity: 1; }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(11,16,35,0.45);
+            z-index: 1000; display: flex; align-items: center; justify-content: center;
+            padding: 1rem;
+        }
+        .modal-panel {
+            background: var(--white); border-radius: 14px; width: 100%; max-width: 680px;
+            max-height: 90vh; overflow-y: auto; box-shadow: 0 24px 64px rgba(11,16,35,0.18);
+            display: flex; flex-direction: column;
+        }
+        .modal-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 1.25rem 1.5rem; border-bottom: 1px solid #f0f0f0;
+            flex-shrink: 0;
+        }
+        .modal-header h3 { margin: 0; font-size: 1.1rem; color: var(--navy); }
+        .modal-close {
+            background: none; border: none; cursor: pointer; font-size: 1.3rem;
+            color: var(--text-muted); padding: 0.2rem; line-height: 1;
+            border-radius: 6px;
+        }
+        .modal-close:hover { background: #f3f4f6; }
+        .modal-body { padding: 1.5rem; flex: 1; overflow-y: auto; }
+        .modal-footer {
+            display: flex; align-items: center; justify-content: flex-end; gap: 0.75rem;
+            padding: 1rem 1.5rem; border-top: 1px solid #f0f0f0; flex-shrink: 0;
+        }
+        .modal-footer-left { margin-right: auto; }
+
+        /* Loading spinner */
+        .spinner { display: inline-block; width: 1.2rem; height: 1.2rem; border: 2.5px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; }
+        .spinner.dark { border-color: rgba(39,60,145,0.2); border-top-color: var(--navy); }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Request card */
+        .request-card { transition: box-shadow 0.15s; cursor: pointer; }
+        .request-card:hover { box-shadow: 0 4px 20px rgba(39,60,145,0.14); }
+        .truncate-2-lines { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+        /* Section divider */
+        .section-label {
+            font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
+            color: var(--text-light); margin-bottom: 0.5rem;
+        }
+
+        /* AI badge */
+        .ai-badge { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-size: 0.68rem; padding: 0.15rem 0.5rem; border-radius: 999px; font-weight: 600; }
+
+        /* Empty state */
+        .empty-state { text-align: center; padding: 3rem 1rem; color: var(--text-muted); }
+        .empty-state i { font-size: 2.5rem; margin-bottom: 0.75rem; opacity: 0.4; display: block; }
     </style>
     <script src="https://designsaplus.com/cdn/design-system.js"></script>
     <script src="https://kit.fontawesome.com/a7c8263a8e.js" crossorigin="anonymous"></script>
 </head>
-<body class="bg-background">
-    <div class="sidebar-topbar-content-offset">
-        <div class="container py-5 px-4 max-w-screen-xl mx-auto">
-            
-            <!-- Page Header -->
-            <div class="flex items-center justify-between mb-5">
-                <div>
-                    <h1 class="h2 mb-1">Feature Request Tracker</h1>
-                    <p class="text-muted text-body-s">Source: Feedback Tracker Slack List</p>
-                </div>
-                <div class="flex items-center gap-3">
-                    <span id="lastSync" class="text-body-xs text-muted"></span>
-                    <button id="syncBtn" class="btn btn-secondary" type="button" onclick="loadData()">
-                        <i class="fa-solid fa-sync me-2"></i>Refresh
-                    </button>
-                </div>
-            </div>
-            
-            <!-- Stats Cards -->
-            <div class="flex gap-3 mb-5 flex-wrap">
-                <button onclick="filterByStatus('all')" data-status="all" class="tw-card p-3 cursor-pointer stat-btn flex-1 min-w-24 text-center border-2 transition">
-                    <div class="text-body-xs text-muted mb-1">Total</div>
-                    <div id="stat-all" class="text-2xl fw-bold" style="color: #273c91;">0</div>
-                </button>
-                <button onclick="filterByStatus('pending')" data-status="pending" class="tw-card p-3 cursor-pointer stat-btn flex-1 min-w-24 text-center border-2 transition">
-                    <div class="text-body-xs text-muted mb-1">New</div>
-                    <div id="stat-pending" class="text-2xl fw-bold" style="color: #f59e0b;">0</div>
-                </button>
-                <button onclick="filterByStatus('review')" data-status="review" class="tw-card p-3 cursor-pointer stat-btn flex-1 min-w-24 text-center border-2 transition">
-                    <div class="text-body-xs text-muted mb-1">Accepted</div>
-                    <div id="stat-review" class="text-2xl fw-bold" style="color: #3b82f6;">0</div>
-                </button>
-                <button onclick="filterByStatus('refining')" data-status="refining" class="tw-card p-3 cursor-pointer stat-btn flex-1 min-w-24 text-center border-2 transition">
-                    <div class="text-body-xs text-muted mb-1">In Progress</div>
-                    <div id="stat-refining" class="text-2xl fw-bold" style="color: #8b5cf6;">0</div>
-                </button>
-                <button onclick="filterByStatus('complete')" data-status="complete" class="tw-card p-3 cursor-pointer stat-btn flex-1 min-w-24 text-center border-2 transition">
-                    <div class="text-body-xs text-muted mb-1">Completed</div>
-                    <div id="stat-complete" class="text-2xl fw-bold" style="color: #10b981;">0</div>
-                </button>
-                <button onclick="filterByStatus('rejected')" data-status="rejected" class="tw-card p-3 cursor-pointer stat-btn flex-1 min-w-24 text-center border-2 transition">
-                    <div class="text-body-xs text-muted mb-1">Rejected</div>
-                    <div id="stat-rejected" class="text-2xl fw-bold" style="color: #dc2626;">0</div>
-                </button>
-            </div>
-            
-            <!-- Search -->
-            <div class="mb-4">
-                <div class="relative">
-                    <i class="fa-solid fa-search absolute items-center" style="left: 1rem; top: 50%; transform: translateY(-50%); color: #9ca3af;"></i>
-                    <input type="text" id="searchInput" placeholder="Search by subject, area, or details..." 
-                        class="form-control" style="padding-left: 2.5rem;" oninput="renderRequests()">
-                </div>
-            </div>
-            
-            <!-- Request List -->
-            <div id="requestList" class="space-y-3">
-                <div class="tw-card p-5 text-center text-muted">
-                    <i class="fa-solid fa-spinner fa-spin text-xl mb-2"></i>
-                    <p>Loading feature requests...</p>
-                </div>
-            </div>
-            
-        </div>
-    </div>
-    
-    <!-- Detail Modal -->
-    <div data-controller="popup" id="detailModal" class="tw-hidden">
-        <div class="popup-overlay" data-action="click->popup#close"></div>
-        <div class="popup-panel" role="dialog" aria-modal="true" style="max-width: 700px; max-height: 90vh; overflow-y: auto;">
-            <div class="popup-header">
-                <h2 class="popup-header-title">Request Details</h2>
-                <button class="popup-close" type="button" aria-label="Close" data-action="click->popup#close">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-            <div class="popup-body" id="modalContent"></div>
-            <div class="popup-footer">
-                <button class="btn btn-secondary" type="button" data-action="click->popup#close">Close</button>
-                <button id="modalActionBtn" class="btn btn-primary" type="button"></button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Toast -->
-    <div data-controller="floating-notification" id="toast" class="tw-hidden">
-        <div class="floating-notification-content">
-            <i id="toastIcon" class="fa-solid fa-check-circle text-success me-2"></i>
-            <span id="toastMessage"></span>
-        </div>
-    </div>
+<body>
+<div class="sidebar-topbar-content-offset">
+    <div class="page-wrapper">
 
-    <script>
-        let allRequests = [];
-        let filteredRequests = [];
-        let currentFilter = 'all';
-        let selectedRequest = null;
-        
-        // Load data from JSON
-        async function loadData() {
-            const btn = document.getElementById('syncBtn');
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i>Loading...';
-            
-            try {
-                const response = await fetch('./feature-requests.json');
-                const data = await response.json();
-                
-                allRequests = data.requests.map(r => ({
-                    ...r,
-                    // Ensure status is mapped correctly
-                    status: r.status || 'pending'
-                }));
-                
-                // Restore any local status changes (only if explicitly set before)
-                const savedStatuses = JSON.parse(localStorage.getItem('fr_statuses') || '{}');
-                const hasJsonStatus = allRequests.some(r => r.status && r.status !== 'pending');
-                // Only use localStorage if JSON didn't have proper statuses
-                if (!hasJsonStatus) {
-                    allRequests.forEach(r => {
-                        if (savedStatuses[r.id]) {
-                            r.status = savedStatuses[r.id];
-                            r.productTeamNote = savedStatuses[r.id + '_note'] || r.productTeamNote;
-                        }
-                    });
-                }
-                
-                updateStats();
-                renderRequests();
-                
-                document.getElementById('lastSync').textContent = 
-                    'Loaded ' + allRequests.length + ' requests';
-                
-            } catch (error) {
-                console.error('Load error:', error);
-                showToast('Failed to load data', 'error');
-            }
-            
-            btn.disabled = false;
-            btn.innerHTML = '<i class="fa-solid fa-sync me-2"></i>Refresh';
-        }
-        
-        // Save status changes
-        function saveStatus(id, status, note) {
-            const saved = JSON.parse(localStorage.getItem('fr_statuses') || '{}');
-            saved[id] = status;
-            if (note !== undefined) {
-                saved[id + '_note'] = note;
-            }
-            localStorage.setItem('fr_statuses', JSON.stringify(saved));
-        }
-        
-        // Update stats
-        function updateStats() {
-            const stats = {
-                all: allRequests.length,
-                pending: allRequests.filter(r => r.status === 'pending').length,
-                review: allRequests.filter(r => r.status === 'review').length,
-                refining: allRequests.filter(r => r.status === 'refining').length,
-                complete: allRequests.filter(r => r.status === 'complete').length,
-                rejected: allRequests.filter(r => r.status === 'rejected').length
-            };
-            
-            for (const [key, value] of Object.entries(stats)) {
-                const el = document.getElementById('stat-' + key);
-                if (el) el.textContent = value;
-            }
-            
-            // Update filter button borders
-            document.querySelectorAll('.stat-btn').forEach(btn => {
-                const status = btn.dataset.status;
-                btn.style.borderColor = status === currentFilter ? '#ec634b' : 'transparent';
-            });
-        }
-        
-        // Filter by status
-        function filterByStatus(status) {
-            currentFilter = status;
-            updateStats();
-            renderRequests();
-        }
-        
-        // Render requests list
-        function renderRequests() {
-            const search = document.getElementById('searchInput').value.toLowerCase();
-            
-            filteredRequests = allRequests.filter(r => {
-                const matchesFilter = currentFilter === 'all' || r.status === currentFilter;
-                const matchesSearch = !search || 
-                    r.subject.toLowerCase().includes(search) ||
-                    (r.area || '').toLowerCase().includes(search) ||
-                    (r.details || '').toLowerCase().includes(search) ||
-                    (r.type || '').toLowerCase().includes(search);
-                return matchesFilter && matchesSearch;
-            });
-            
-            const container = document.getElementById('requestList');
-            
-            if (filteredRequests.length === 0) {
-                container.innerHTML = `
-                    <div class="tw-card p-5 text-center text-muted">
-                        <i class="fa-solid fa-inbox text-3xl mb-3"></i>
-                        <p>No requests found</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            container.innerHTML = filteredRequests.map(r => `
-                <div class="tw-card p-4 cursor-pointer hover:shadow-md transition" onclick="openDetail(${r.id})">
-                    <div class="flex items-start gap-4">
-                        <div class="flex-1 min-w-0">
-                            <div class="flex items-center gap-2 mb-2 flex-wrap">
-                                ${getStatusBadge(r.status)}
-                                <span class="text-body-xs text-muted">${r.type || 'Enhancement'}</span>
-                                <span class="text-body-xs px-2 py-0.5 rounded" style="background: #f3f4f6;">${r.area || 'Unknown'}</span>
-                                ${isHighPriority(r.importance) ? '<span class="badge badge-danger-subtle">HIGH</span>' : ''}
-                            </div>
-                            <h3 class="h5 mb-2" style="color: #273c91;">${escapeHtml(r.subject)}</h3>
-                            <p class="text-body-s text-muted mb-3 truncate-2-lines">${escapeHtml(r.details || '')}</p>
-                            
-                            ${r.productTeamNote ? `
-                            <div class="p-3 rounded mb-3" style="background: #eff6ff; border-left: 3px solid #3b82f6;">
-                                <p class="text-body-s mb-0" style="white-space: pre-wrap;">${escapeHtml(r.productTeamNote)}</p>
-                            </div>
-                            ` : ''}
-                            
-                            <div class="flex items-center gap-4 text-body-xs text-muted">
-                                <span><i class="fa-solid fa-user me-1"></i>${escapeHtml(r.submittedBy || 'Unknown')}</span>
-                                <span><i class="fa-solid fa-calendar me-1"></i>${formatDate(r.submittedAt)}</span>
-                                ${r.jiraKey ? `<span class="text-info"><i class="fa-brands fa-jira me-1"></i>${r.jiraKey}</span>` : ''}
-                                ${r.url ? `<a href="${escapeHtml(r.url)}" target="_blank" class="text-info" onclick="event.stopPropagation();"><i class="fa-solid fa-external-link me-1"></i>Link</a>` : ''}
-                            </div>
-                        </div>
-                        
-                        <div class="flex flex-col gap-2 flex-shrink-0">
-                            ${getQuickActions(r)}
-                        </div>
-                    </div>
+        <!-- Page Header -->
+        <div class="flex items-center justify-between mb-4">
+            <div>
+                <h1 class="h2 mb-1" style="color: var(--navy);">
+                    <i class="fa-solid fa-wand-magic-sparkles" style="color: var(--coral); margin-right: 0.5rem;"></i>
+                    Feature Request Manager
+                </h1>
+                <p class="text-body-s text-muted mb-0">Source: #internal-product-feedback Slack channel</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <span id="lastSync" class="text-body-xs text-muted"></span>
+                <button id="syncBtn" class="btn btn-secondary" onclick="syncData()">
+                    <i class="fa-solid fa-sync"></i>Refresh
+                </button>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="flex gap-3 mb-4 flex-wrap" id="statsRow">
+            <!-- Populated by JS -->
+        </div>
+
+        <!-- Search -->
+        <div class="mb-4">
+            <div class="relative">
+                <i class="fa-solid fa-search" style="position: absolute; left: 0.9rem; top: 50%; transform: translateY(-50%); color: #9ca3af; font-size: 0.85rem;"></i>
+                <input type="text" id="searchInput" placeholder="Search by subject, area, or details..." 
+                    class="form-control" style="padding-left: 2.5rem;" oninput="renderRequests()">
+            </div>
+        </div>
+
+        <!-- Request List -->
+        <div id="requestList">
+            <div class="tw-card p-5 text-center text-muted">
+                <i class="fa-solid fa-spinner fa-spin" style="font-size: 1.5rem; margin-bottom: 0.5rem;"></i>
+                <p class="mb-0">Loading feature requests...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ACCEPT MODAL -->
+<div id="acceptModal" class="modal-overlay tw-hidden" onclick="if(event.target===this)closeAcceptModal()">
+    <div class="modal-panel">
+        <div class="modal-header">
+            <h3><i class="fa-solid fa-check-circle" style="color: #10b981; margin-right: 0.5rem;"></i>Accept Feature Request</h3>
+            <button class="modal-close" onclick="closeAcceptModal()">&times;</button>
+        </div>
+        <div class="modal-body" id="acceptModalContent">
+            <!-- Dynamic content -->
+        </div>
+        <div class="modal-footer" id="acceptModalFooter">
+            <div class="manual-banner info tw-hidden" id="acceptBanner" style="display:none;flex:1;">
+                <i class="fa-solid fa-info-circle" style="flex-shrink:0;margin-top:0.1rem;"></i>
+                <div id="acceptBannerText" style="flex:1;"></div>
+            </div>
+            <div style="display:flex;gap:0.75rem;margin-left:auto;">
+                <button class="btn btn-ghost" onclick="closeAcceptModal()">Cancel</button>
+                <button id="acceptActionBtn" class="btn btn-success" onclick="submitAccept()">
+                    <i class="fa-solid fa-check"></i>Accept &amp; Create
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- REJECT MODAL -->
+<div id="rejectModal" class="modal-overlay tw-hidden" onclick="if(event.target===this)closeRejectModal()">
+    <div class="modal-panel">
+        <div class="modal-header">
+            <h3><i class="fa-solid fa-ban" style="color: #dc2626; margin-right: 0.5rem;"></i>Reject Feature Request</h3>
+            <button class="modal-close" onclick="closeRejectModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p class="text-body-s text-muted mb-3">Provide an optional note explaining why this request is being rejected. This will be included in your Slack thread reply.</p>
+            <div class="mb-3">
+                <label>Product Team Note <span class="text-body-xs text-muted">(optional)</span></label>
+                <textarea id="rejectNote" class="form-control" rows="4" placeholder="e.g. This is already supported in the current release, or doesn't fit our roadmap..."></textarea>
+            </div>
+            <div class="manual-banner info" style="margin-top:0;">
+                <i class="fa-solid fa-info-circle" style="flex-shrink:0;margin-top:0.1rem;"></i>
+                <div style="flex:1;">
+                    After rejecting, remember to:<br>
+                    <strong>1.</strong> Post a thread reply in Slack: <em>Status: Rejected | Note: [your note]</em><br>
+                    <strong>2.</strong> Manually update the Slack List to <strong>Rejected</strong>
                 </div>
-            `).join('');
-        }
-        
-        function isHighPriority(importance) {
-            if (!importance) return false;
-            const imp = importance.toLowerCase();
-            return imp === 'critical' || imp === 'high' || imp === 'high!';
-        }
-        
-        function getStatusBadge(status) {
-            const badges = {
-                'pending': '<span class="badge badge-warning-subtle badge-dot">New</span>',
-                'review': '<span class="badge" style="background: #dbeafe; color: #2563eb;">Accepted</span>',
-                'refining': '<span class="badge" style="background: #f3e8ff; color: #9333ea;">In Progress</span>',
-                'complete': '<span class="badge badge-success-subtle"><i class="fa-solid fa-check"></i> Completed</span>',
-                'rejected': '<span class="badge badge-danger-subtle"><i class="fa-solid fa-ban"></i> Rejected</span>'
-            };
-            return badges[status] || badges['pending'];
-        }
-        
-        function getQuickActions(r) {
-            if (r.status === 'pending') {
-                return `
-                    <button class="btn btn-sm" style="background: #10b981; color: white;" onclick="event.stopPropagation(); setStatus(${r.id}, 'review')">
-                        <i class="fa-solid fa-check me-1"></i>Accept
-                    </button>
-                `;
-            } else if (r.status === 'review') {
-                return `
-                    <button class="btn btn-sm" style="background: #8b5cf6; color: white;" onclick="event.stopPropagation(); setStatus(${r.id}, 'refining')">
-                        <i class="fa-solid fa-spinner me-1"></i>Start
-                    </button>
-                `;
-            } else if (r.status === 'refining') {
-                return `
-                    <button class="btn btn-sm" style="background: #10b981; color: white;" onclick="event.stopPropagation(); setStatus(${r.id}, 'complete')">
-                        <i class="fa-solid fa-check me-1"></i>Complete
-                    </button>
-                `;
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-ghost" onclick="closeRejectModal()">Cancel</button>
+            <button class="btn btn-danger" onclick="submitReject()">
+                <i class="fa-solid fa-ban"></i>Confirm Rejection
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+// ─── State ──────────────────────────────────────────────────────────────────
+let allRequests = [];
+let filteredRequests = [];
+let currentFilter = 'all';
+let selectedRequest = null;
+let components = [];          // Productboard component names
+let componentIdMap = {};      // component name → UUID (for display only)
+let acceptStep = 'config';   // 'config' | 'generating' | 'preview' | 'creating' | 'done'
+let pendingAccept = null;     // request being accepted
+
+const STATUS_META = {
+    pending:    { label: 'New',         color: '#d97706', bg: '#fef3c7', dotClass: 'badge-warning-subtle' },
+    accepted:   { label: 'Accepted',    color: '#2563eb', bg: '#dbeafe', dotClass: 'badge-info' },
+    inprogress: { label: 'In Progress',color: '#9333ea', bg: '#f3e8ff', dotClass: '' },
+    completed:  { label: 'Completed',  color: '#16a34a', bg: '#d1fae5', dotClass: 'badge-success-subtle' },
+    rejected:   { label: 'Rejected',   color: '#dc2626', bg: '#fee2e2', dotClass: 'badge-danger-subtle' },
+};
+const STAT_ORDER = ['all','pending','accepted','inprogress','completed','rejected'];
+
+// ─── Init ──────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', async () => {
+    renderStatsRow();
+    loadData();
+    await loadComponents();
+});
+
+// ─── Load components from server ──────────────────────────────────────────
+async function loadComponents() {
+    try {
+        const r = await fetch('/api/components');
+        const d = await r.json();
+        components = (d.components || []).sort();
+        // Build display map (name → name for now)
+        components.forEach(c => { componentIdMap[c] = c; });
+    } catch(e) {
+        console.warn('Could not load components:', e);
+        components = [];
+    }
+}
+
+// ─── Data loading ──────────────────────────────────────────────────────────
+async function loadData() {
+    const btn = document.getElementById('syncBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner dark" style="width:0.9rem;height:0.9rem;border-width:2px;margin-right:0.3rem;"></span>Loading...';
+
+    try {
+        const resp = await fetch('./feature-requests.json?_=' + Date.now());
+        const data = await resp.json();
+        allRequests = (data.requests || []).map(r => ({ ...r }));
+
+        // Merge any local status overrides
+        const saved = JSON.parse(localStorage.getItem('fr_statuses') || '{}');
+        allRequests.forEach(r => {
+            if (saved[r.id] && typeof saved[r.id] === 'string') {
+                r.status = saved[r.id];
+                r._localNote = saved[r.id + '_note'] || r.productTeamNote || '';
             }
-            return '';
-        }
-        
-        function setStatus(id, newStatus) {
-            const r = allRequests.find(req => req.id === id);
-            if (!r) return;
-            
-            const oldStatus = r.status;
-            r.status = newStatus;
-            
-            // Save to localStorage
-            saveStatus(id, newStatus);
-            
-            updateStats();
-            renderRequests();
-            
-            const statusNames = {
-                'review': 'Accepted',
-                'refining': 'In Progress',
-                'complete': 'Completed',
-                'rejected': 'Rejected'
-            };
-            showToast(`Status changed to ${statusNames[newStatus]}`);
-        }
-        
-        function openDetail(id) {
-            selectedRequest = allRequests.find(r => r.id === id);
-            if (!selectedRequest) return;
-            
-            const r = selectedRequest;
-            const modal = document.getElementById('detailModal');
-            const content = document.getElementById('modalContent');
-            const actionBtn = document.getElementById('modalActionBtn');
-            
-            content.innerHTML = `
-                <div class="space-y-4">
-                    <div>
-                        <label class="text-body-xs text-muted">Subject</label>
-                        <p class="fw-semibold" style="color: #273c91;">${escapeHtml(r.subject)}</p>
-                    </div>
-                    
-                    <div class="flex gap-4 flex-wrap">
-                        <div>
-                            <label class="text-body-xs text-muted">Type</label>
-                            <p>${r.type || 'Enhancement'}</p>
-                        </div>
-                        <div>
-                            <label class="text-body-xs text-muted">Importance</label>
-                            <span class="badge ${isHighPriority(r.importance) ? 'badge-danger-subtle' : 'badge-neutral-subtle'}">${r.importance || 'Normal'}</span>
-                        </div>
-                        <div>
-                            <label class="text-body-xs text-muted">Status</label>
-                            ${getStatusBadge(r.status)}
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <label class="text-body-xs text-muted">Feature Area</label>
-                        <p>${escapeHtml(r.area || 'Unknown')}</p>
-                    </div>
-                    
-                    ${r.details ? `
-                    <div>
-                        <label class="text-body-xs text-muted">Details</label>
-                        <p style="white-space: pre-wrap;">${escapeHtml(r.details)}</p>
-                    </div>
-                    ` : ''}
-                    
-                    ${r.impact ? `
-                    <div>
-                        <label class="text-body-xs text-muted">Impact</label>
-                        <p style="white-space: pre-wrap;">${escapeHtml(r.impact)}</p>
-                    </div>
-                    ` : ''}
-                    
-                    ${r.solution ? `
-                    <div>
-                        <label class="text-body-xs text-muted">Suggested Solution</label>
-                        <p style="white-space: pre-wrap;">${escapeHtml(r.solution)}</p>
-                    </div>
-                    ` : ''}
-                    
-                    ${r.productTeamNote ? `
-                    <div class="p-3 rounded" style="background: #eff6ff; border-left: 3px solid #3b82f6;">
-                        <label class="text-body-xs fw-semibold" style="color: #3b82f6;">
-                            <i class="fa-solid fa-sticky-note me-1"></i>Product Team Note
-                        </label>
-                        <p class="mt-2 mb-0" style="white-space: pre-wrap;">${escapeHtml(r.productTeamNote)}</p>
-                    </div>
-                    ` : ''}
-                    
-                    ${r.jiraKey ? `
-                    <div>
-                        <label class="text-body-xs text-muted">Jira Story</label>
-                        <a href="https://ulasdev.atlassian.net/browse/${r.jiraKey}" target="_blank" class="text-info">${r.jiraKey}</a>
-                    </div>
-                    ` : ''}
-                    
-                    <div class="flex gap-4 text-body-xs text-muted">
-                        <span><i class="fa-solid fa-user me-1"></i>${escapeHtml(r.submittedBy || 'Unknown')}</span>
-                        <span><i class="fa-solid fa-calendar me-1"></i>${formatDate(r.submittedAt)}</span>
-                    </div>
-                    
-                    ${r.url ? `
-                    <div>
-                        <label class="text-body-xs text-muted">System URL</label>
-                        <a href="${escapeHtml(r.url)}" target="_blank" class="text-info">${escapeHtml(r.url)}</a>
-                    </div>
-                    ` : ''}
-                </div>
-            `;
-            
-            // Set action button
-            if (r.status === 'pending') {
-                actionBtn.innerHTML = '<i class="fa-solid fa-check me-2"></i>Accept';
-                actionBtn.onclick = () => { setStatus(r.id, 'review'); closeModal(); };
-                actionBtn.style.display = '';
-            } else if (r.status === 'review') {
-                actionBtn.innerHTML = '<i class="fa-solid fa-spinner me-2"></i>Start Working';
-                actionBtn.onclick = () => { setStatus(r.id, 'refining'); closeModal(); };
-                actionBtn.style.display = '';
-            } else if (r.status === 'refining') {
-                actionBtn.innerHTML = '<i class="fa-solid fa-check me-2"></i>Mark Complete';
-                actionBtn.onclick = () => { setStatus(r.id, 'complete'); closeModal(); };
-                actionBtn.style.display = '';
-            } else {
-                actionBtn.style.display = 'none';
-            }
-            
-            modal.classList.remove('tw-hidden');
-        }
-        
-        function closeModal() {
-            document.getElementById('detailModal').classList.add('tw-hidden');
-            selectedRequest = null;
-        }
-        
-        function showToast(message, type = 'success') {
-            const toast = document.getElementById('toast');
-            const icon = document.getElementById('toastIcon');
-            const msg = document.getElementById('toastMessage');
-            
-            msg.textContent = message;
-            icon.className = type === 'error' ? 'fa-solid fa-exclamation-circle text-danger me-2' : 'fa-solid fa-check-circle text-success me-2';
-            
-            toast.classList.remove('tw-hidden');
-            setTimeout(() => toast.classList.add('tw-hidden'), 4000);
-        }
-        
-        function escapeHtml(text) {
-            if (!text) return '';
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-        
-        function formatDate(isoString) {
-            if (!isoString) return '';
-            const date = new Date(isoString);
-            return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
-        }
-        
-        // Add CSS for line clamp
-        document.addEventListener('DOMContentLoaded', function() {
-            const style = document.createElement('style');
-            style.textContent = `.truncate-2-lines { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }`;
-            document.head.appendChild(style);
-            
-            loadData();
         });
-    </script>
+
+        updateStats();
+        renderRequests();
+        document.getElementById('lastSync').textContent = data.fetched_at
+            ? 'Synced ' + timeAgo(data.fetched_at)
+            : 'Loaded ' + allRequests.length + ' requests';
+    } catch(err) {
+        showToast('Failed to load data', 'error');
+    }
+
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fa-solid fa-sync"></i>Refresh';
+}
+
+async function syncData() {
+    const btn = document.getElementById('syncBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner dark" style="width:0.9rem;height:0.9rem;border-width:2px;margin-right:0.3rem;"></span>Syncing...';
+
+    try {
+        const resp = await fetch('/api/sync');
+        const result = await resp.json();
+        if (result.success) {
+            showToast(`Synced ${result.count} requests from Slack`, 'success');
+            await loadData();
+        } else {
+            showToast('Sync failed: ' + (result.error || 'Unknown error'), 'error');
+        }
+    } catch(e) {
+        showToast('Sync request failed', 'error');
+    }
+
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fa-solid fa-sync"></i>Refresh';
+}
+
+// ─── Stats ─────────────────────────────────────────────────────────────────
+function renderStatsRow() {
+    const counts = {
+        all: allRequests.length,
+        pending: allRequests.filter(r => r.status === 'pending').length,
+        accepted: allRequests.filter(r => r.status === 'accepted').length,
+        inprogress: allRequests.filter(r => r.status === 'inprogress').length,
+        completed: allRequests.filter(r => r.status === 'completed').length,
+        rejected: allRequests.filter(r => r.status === 'rejected').length,
+    };
+    const meta = {
+        all: { label: 'Total', color: '#273c91' },
+        pending: { label: 'New', color: '#d97706' },
+        accepted: { label: 'Accepted', color: '#2563eb' },
+        inprogress: { label: 'In Progress', color: '#9333ea' },
+        completed: { label: 'Completed', color: '#16a34a' },
+        rejected: { label: 'Rejected', color: '#dc2626' },
+    };
+
+    document.getElementById('statsRow').innerHTML = STAT_ORDER.map(s => `
+        <button class="tw-card p-3 stat-btn flex-1 min-w-24 text-center ${currentFilter===s?'active':''}"
+            style="border-color: ${currentFilter===s?'var(--coral)':'transparent'};"
+            onclick="filterByStatus('${s}')">
+            <div class="text-body-xs text-muted mb-1">${meta[s].label}</div>
+            <div class="text-2xl fw-bold" style="color: ${meta[s].color};">${counts[s]}</div>
+        </button>
+    `).join('');
+}
+
+function updateStats() { renderStatsRow(); }
+
+function filterByStatus(status) {
+    currentFilter = status;
+    renderStatsRow();
+    renderRequests();
+}
+
+// ─── Render list ────────────────────────────────────────────────────────────
+function renderRequests() {
+    const search = document.getElementById('searchInput').value.toLowerCase();
+    filteredRequests = allRequests.filter(r => {
+        const matchFilter = currentFilter === 'all' || r.status === currentFilter;
+        const matchSearch = !search ||
+            r.subject.toLowerCase().includes(search) ||
+            (r.area||'').toLowerCase().includes(search) ||
+            (r.details||'').toLowerCase().includes(search) ||
+            (r.type||'').toLowerCase().includes(search);
+        return matchFilter && matchSearch;
+    });
+
+    const container = document.getElementById('requestList');
+    if (filteredRequests.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <i class="fa-solid fa-inbox"></i>
+                <p>No requests found</p>
+            </div>`;
+        return;
+    }
+
+    container.innerHTML = filteredRequests.map(r => `
+        <div class="tw-card request-card p-4 mb-3" onclick="openRequest(${r.id})">
+            <div class="flex items-start gap-3">
+                <div class="flex-1 min-w-0">
+                    <div class="flex flex-wrap gap-2 mb-2 align-items-center">
+                        ${statusBadge(r.status)}
+                        <span class="badge" style="background:#f3f4f6;color:#374151;">${r.type||'Enhancement'}</span>
+                        ${r.area ? `<span class="badge" style="background:#ede9fe;color:#5b21b6;">${escHtml(r.area)}</span>` : ''}
+                        ${isHighPriority(r.importance) ? '<span class="badge badge-danger-subtle">HIGH</span>' : ''}
+                    </div>
+                    <h3 class="h5 mb-2" style="color:var(--navy);">${escHtml(r.subject)}</h3>
+                    <p class="text-body-s text-muted mb-3 truncate-2-lines">${escHtml(r.details||'')}</p>
+
+                    ${r.productTeamNote ? `
+                    <div class="p-3 rounded mb-3" style="background:#fffbeb;border-left:3px solid #fcd34d;">
+                        <p class="text-body-s mb-0" style="white-space:pre-wrap;color:#92400e;">${escHtml(r.productTeamNote)}</p>
+                    </div>` : ''}
+
+                    ${r.generatedStory ? `
+                    <div class="p-3 rounded mb-3" style="background:#f0fdf4;border-left:3px solid #86efac;">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="ai-badge">AI Generated</span>
+                            ${r.productboardUrl ? `<a href="${escHtml(r.productboardUrl)}" target="_blank" class="text-body-xs" style="color:#1d4ed8;" onclick="event.stopPropagation();"><i class="fa-solid fa-external-link me-1"></i>View in Productboard</a>` : ''}
+                        </div>
+                        <pre class="text-body-xs mb-0" style="white-space:pre-wrap;color:#065f46;max-height:4rem;overflow:hidden;font-family:inherit;">${escHtml(r.generatedStory.slice(0,200))}${r.generatedStory.length>200?'…':''}</pre>
+                    </div>` : ''}
+
+                    <div class="flex flex-wrap gap-3 text-body-xs text-muted">
+                        <span><i class="fa-solid fa-user me-1"></i>${escHtml(r.submittedBy||'Unknown')}</span>
+                        <span><i class="fa-solid fa-calendar me-1"></i>${formatDate(r.submittedAt)}</span>
+                        ${r.productboardUrl ? `<a href="${escHtml(r.productboardUrl)}" target="_blank" class="text-info" onclick="event.stopPropagation();"><i class="fa-brands fa-product-hunt me-1"></i>Productboard</a>` : ''}
+                    </div>
+                </div>
+
+                <div class="flex flex-col gap-2 flex-shrink-0" style="min-width:120px;" onclick="event.stopPropagation();">
+                    ${actionButtons(r)}
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function statusBadge(status) {
+    const m = STATUS_META[status] || STATUS_META.pending;
+    const label = m.label;
+    if (status === 'pending') return `<span class="badge badge-warning-subtle">${label}</span>`;
+    if (status === 'accepted') return `<span class="badge badge-info">${label}</span>`;
+    if (status === 'inprogress') return `<span class="badge" style="background:#f3e8ff;color:#9333ea;">${label}</span>`;
+    if (status === 'completed') return `<span class="badge badge-success-subtle"><i class="fa-solid fa-check"></i>${label}</span>`;
+    if (status === 'rejected') return `<span class="badge badge-danger-subtle"><i class="fa-solid fa-ban"></i>${label}</span>`;
+    return `<span class="badge badge-warning-subtle">${label}</span>`;
+}
+
+function actionButtons(r) {
+    if (r.status === 'pending') {
+        return `
+            <button class="btn btn-success btn-sm" onclick="startAccept(${r.id})">
+                <i class="fa-solid fa-check"></i>Accept
+            </button>
+            <button class="btn btn-ghost btn-sm" onclick="startReject(${r.id})">
+                <i class="fa-solid fa-ban"></i>Reject
+            </button>`;
+    }
+    if (r.status === 'accepted') {
+        return `
+            <button class="btn btn-sm" style="background:#9333ea;color:white;" onclick="setStatus(${r.id},'inprogress')">
+                <i class="fa-solid fa-spinner"></i>Start
+            </button>
+            ${r.generatedStory ? `<button class="btn btn-secondary btn-sm" onclick="copyStory(${r.id})"><i class="fa-solid fa-copy"></i>Copy</button>` : ''}`;
+    }
+    if (r.status === 'inprogress') {
+        return `
+            <button class="btn btn-success btn-sm" onclick="setStatus(${r.id},'completed')">
+                <i class="fa-solid fa-check"></i>Complete
+            </button>
+            ${r.generatedStory ? `<button class="btn btn-secondary btn-sm" onclick="copyStory(${r.id})"><i class="fa-solid fa-copy"></i>Copy</button>` : ''}`;
+    }
+    return '';
+}
+
+function isHighPriority(imp) {
+    if (!imp) return false;
+    return ['critical','high','high!'].includes(imp.toLowerCase());
+}
+
+// ─── Open request detail ───────────────────────────────────────────────────
+function openRequest(id) {
+    const r = allRequests.find(x => x.id === id);
+    if (!r) return;
+
+    if (r.status === 'pending') {
+        startAccept(id);
+    } else if (r.status === 'accepted') {
+        startAccept(id, true); // skip to preview with existing story
+    }
+}
+
+// ─── Accept flow ────────────────────────────────────────────────────────────
+let _acceptDraft = {}; // { id, component, generatedStory }
+
+async function startAccept(id, skipToPreview = false) {
+    const r = allRequests.find(x => x.id === id);
+    if (!r) return;
+    selectedRequest = r;
+    _acceptDraft = { id, component: r.area || '', generatedStory: r.generatedStory || '' };
+
+    if (skipToPreview && r.generatedStory) {
+        // Show preview step directly
+        acceptStep = 'preview';
+        showAcceptPreview();
+    } else {
+        // Show component picker step
+        acceptStep = 'config';
+        showAcceptConfig();
+    }
+
+    document.getElementById('acceptModal').classList.remove('tw-hidden');
+}
+
+function showAcceptConfig() {
+    const r = selectedRequest;
+    const footer = document.getElementById('acceptModalFooter');
+    const content = document.getElementById('acceptModalContent');
+
+    content.innerHTML = `
+        <div class="mb-4">
+            <div class="tw-card p-3" style="background:#f8fafc;border-radius:8px;">
+                <p class="h5 mb-1" style="color:var(--navy);">${escHtml(r.subject)}</p>
+                <p class="text-body-s text-muted mb-0">${escHtml((r.details||'').slice(0,200))}${r.details&&r.details.length>200?'…':''}</p>
+            </div>
+        </div>
+
+        <div class="mb-4">
+            <label>Productboard Component <span style="color:#dc2626;">*</span></label>
+            <select id="componentSelect" class="form-control">
+                <option value="">-- Select a component --</option>
+                ${components.map(c => `<option value="${escHtml(c)}" ${_acceptDraft.component===c?'selected':''}>${escHtml(c)}</option>`).join('')}
+            </select>
+            <p class="text-body-xs text-muted mt-1">This determines which team owns the sub-feature in Productboard.</p>
+        </div>
+
+        ${_acceptDraft.generatedStory ? `
+        <div class="mb-3">
+            <label><i class="fa-solid fa-robot me-1"></i>Existing Jira Story <span class="ai-badge">from earlier</span></label>
+            <p class="text-body-xs text-muted mb-2">A story was already generated. You can accept it or generate a new one.</p>
+            <button class="btn btn-secondary btn-sm" onclick="showAcceptPreview()">
+                <i class="fa-solid fa-eye me-1"></i>Review &amp; Accept Existing Story
+            </button>
+        </div>` : ''}
+    `;
+
+    footer.innerHTML = `
+        <button class="btn btn-ghost" onclick="closeAcceptModal()">Cancel</button>
+        <button id="generateBtn" class="btn btn-primary" onclick="generateAndPreview()">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>Generate Story &amp; Preview
+        </button>
+    `;
+}
+
+async function generateAndPreview() {
+    const component = document.getElementById('componentSelect').value;
+    if (!component) { showToast('Please select a Productboard component', 'error'); return; }
+    _acceptDraft.component = component;
+
+    const content = document.getElementById('acceptModalContent');
+    const footer = document.getElementById('acceptModalFooter');
+
+    // Show loading
+    acceptStep = 'generating';
+    content.innerHTML = `
+        <div class="text-center p-5">
+            <div class="spinner dark mx-auto mb-3" style="width:2rem;height:2rem;border-width:3px;"></div>
+            <p class="fw-semibold mb-1" style="color:var(--navy);">Generating Jira Story...</p>
+            <p class="text-body-s text-muted">Using AI to structure this feedback into Jira format</p>
+        </div>`;
+    footer.innerHTML = `<button class="btn btn-ghost" onclick="closeAcceptModal()">Cancel</button>`;
+
+    try {
+        const r = selectedRequest;
+        const resp = await fetch('/api/generate-story', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                subject: r.subject, type: r.type || 'Enhancement', area: r.area,
+                importance: r.importance, details: r.details, impact: r.impact,
+                solution: r.solution, url: r.url, sample: r.sample,
+                slack_ts: r.ts, submitter: r.submittedBy || 'Unknown',
+                component: _acceptDraft.component,
+                slack_url: r.slackUrl || `https://applicaa.slack.com/archives/${r.channelId||'C0A0KPT8ZSP'}/p${(r.ts||'').replace('.','')}`
+            })
+        });
+        const data = await resp.json();
+        if (!resp.ok) throw new Error(data.error || 'Generation failed');
+        _acceptDraft.generatedStory = data.story;
+        acceptStep = 'preview';
+        showAcceptPreview();
+    } catch(err) {
+        acceptStep = 'config';
+        showAcceptConfig();
+        showToast(err.message || 'Story generation failed', 'error');
+        const content = document.getElementById('acceptModalContent');
+        content.innerHTML = `
+            <div class="p-4 rounded" style="background:#fef2f2;border:1px solid #fca5a5;margin-bottom:1rem;">
+                <p class="text-danger fw-semibold mb-1"><i class="fa-solid fa-exclamation-triangle me-1"></i>Generation failed</p>
+                <p class="text-body-s text-muted mb-0">${escHtml(err.message)}</p>
+            </div>` + content.innerHTML;
+    }
+}
+
+function showAcceptPreview() {
+    const r = selectedRequest;
+    const footer = document.getElementById('acceptModalFooter');
+    const content = document.getElementById('acceptModalContent');
+    acceptStep = 'preview';
+
+    content.innerHTML = `
+        <div class="mb-3">
+            <div class="flex items-center justify-between mb-2">
+                <label class="fw-semibold text-body-s" style="color:var(--navy);margin-bottom:0;">
+                    <i class="fa-solid fa-robot me-1"></i>Generated Jira Story
+                    <span class="ai-badge" style="margin-left:0.4rem;">AI</span>
+                </label>
+                <button class="btn btn-ghost btn-sm" onclick="copyStoryFromTextarea()">
+                    <i class="fa-solid fa-copy"></i>Copy
+                </button>
+            </div>
+            <p class="text-body-xs text-muted mb-2">Edit the story below before creating. When ready, click <strong>Accept &amp; Create</strong> to save and create the Productboard sub-feature.</p>
+            <textarea id="storyTextarea" class="form-control" rows="20"
+                style="font-family:'Courier New',monospace;font-size:0.78rem;white-space:pre-wrap;resize:vertical;"
+                onchange="_acceptDraft.generatedStory=this.value">${escHtml(_acceptDraft.generatedStory||'')}</textarea>
+        </div>
+        <div class="flex items-center gap-2 text-body-xs text-muted mb-2">
+            <i class="fa-solid fa-layer-group"></i>
+            <span>Component: <strong style="color:var(--navy);">${escHtml(_acceptDraft.component)}</strong></span>
+        </div>
+    `;
+
+    footer.innerHTML = `
+        <button class="btn btn-ghost" onclick="showAcceptConfig()">
+            <i class="fa-solid fa-arrow-left me-1"></i>Back
+        </button>
+        <div style="flex:1;">
+            <div id="acceptBanner" class="manual-banner info" style="display:none;">
+                <i class="fa-solid fa-info-circle" style="flex-shrink:0;margin-top:0.1rem;"></i>
+                <div id="acceptBannerText" style="flex:1;"></div>
+                <button class="banner-dismiss" onclick="this.closest('.manual-banner').style.display='none'">&times;</button>
+            </div>
+        </div>
+        <div style="display:flex;gap:0.75rem;">
+            <button class="btn btn-ghost" onclick="closeAcceptModal()">Cancel</button>
+            <button id="acceptSubmitBtn" class="btn btn-success" onclick="submitAccept()">
+                <i class="fa-solid fa-check"></i>Accept &amp; Create
+            </button>
+        </div>
+    `;
+}
+
+async function submitAccept() {
+    if (acceptStep === 'config') {
+        generateAndPreview();
+        return;
+    }
+
+    const footer = document.getElementById('acceptModalFooter');
+    const submitBtn = document.getElementById('acceptSubmitBtn');
+    const storyTextarea = document.getElementById('storyTextarea');
+    const finalStory = storyTextarea ? storyTextarea.value : _acceptDraft.generatedStory;
+    _acceptDraft.generatedStory = finalStory;
+
+    // Show loading state
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner" style="width:0.9rem;height:0.9rem;border-width:2px;margin-right:0.3rem;"></span>Creating...';
+    }
+
+    const r = selectedRequest;
+    try {
+        const resp = await fetch('/api/accept', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                id: r.id, subject: r.subject, type: r.type || 'Enhancement',
+                area: r.area, importance: r.importance,
+                details: r.details, impact: r.impact, solution: r.solution,
+                url: r.url, sample: r.sample, slack_ts: r.ts,
+                submitter: r.submittedBy || 'Unknown',
+                component: _acceptDraft.component,
+                slack_url: r.slackUrl || `https://applicaa.slack.com/archives/${r.channelId||'C0A0KPT8ZSP'}/p${(r.ts||'').replace('.','')}`,
+                generatedStory: finalStory
+            })
+        });
+        const data = await resp.json();
+
+        // Update request
+        r.status = 'accepted';
+        r.generatedStory = data.story || finalStory;
+        r.productboardUrl = data.productboardUrl || null;
+        r.productboardId = data.productboardId || null;
+        r.component = _acceptDraft.component;
+        saveStatus(r.id, 'accepted', '');
+
+        // Persist to server
+        await fetch('/api/save', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ requests: allRequests })
+        }).catch(() => {});
+
+        updateStats();
+        renderRequests();
+        closeAcceptModal();
+
+        if (data.productboardUrl) {
+            showToast(`Accepted! Productboard sub-feature created.`, 'success');
+        } else {
+            showToast(`Story generated. Productboard step requires manual action.`, 'success');
+        }
+
+        // Show manual instruction toast/banner for Slack
+        if (!data.productboardUrl) {
+            setTimeout(() => {
+                showBannerNote(`Productboard API unavailable &mdash; please create the sub-feature manually at <a href="https://applicaa.productboard.com" target="_blank" style="color:inherit;font-weight:600;">applicaa.productboard.com</a> under <strong>SLACK - Incoming Feedback</strong>, then post in Slack: <em>Status: Accepted | Productboard: [URL]</em> and update the Slack List.`);
+            }, 500);
+        } else {
+            setTimeout(() => {
+                showBannerNote(`Post a thread reply in Slack: <em>Status: Accepted | Productboard: ${data.productboardUrl}</em>, then update the Slack List to <strong>Accepted</strong>.`);
+            }, 500);
+        }
+
+    } catch(err) {
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fa-solid fa-check"></i>Accept &amp; Create';
+        }
+        showToast('Accept failed: ' + err.message, 'error');
+    }
+}
+
+function closeAcceptModal() {
+    document.getElementById('acceptModal').classList.add('tw-hidden');
+    selectedRequest = null;
+    acceptStep = 'config';
+    _acceptDraft = {};
+}
+
+function copyStoryFromTextarea() {
+    const ta = document.getElementById('storyTextarea');
+    if (!ta) return;
+    copyToClipboard(ta.value);
+}
+
+// ─── Reject flow ──────────────────────────────────────────────────────────
+let _rejectId = null;
+
+function startReject(id) {
+    _rejectId = id;
+    document.getElementById('rejectNote').value = '';
+    document.getElementById('rejectModal').classList.remove('tw-hidden');
+}
+
+function submitReject() {
+    const r = allRequests.find(x => x.id === _rejectId);
+    if (!r) return;
+
+    const note = document.getElementById('rejectNote').value.trim();
+    r.status = 'rejected';
+    r.productTeamNote = note;
+    saveStatus(r.id, 'rejected', note);
+
+    fetch('/api/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ requests: allRequests })
+    }).catch(() => {});
+
+    updateStats();
+    renderRequests();
+    closeRejectModal();
+    showToast('Request rejected', 'success');
+
+    setTimeout(() => {
+        showBannerNote(`Post a thread reply in Slack: <em>Status: Rejected${note ? ' | Note: ' + note : ''}</em>, then update the Slack List to <strong>Rejected</strong>.`);
+    }, 500);
+}
+
+function closeRejectModal() {
+    document.getElementById('rejectModal').classList.add('tw-hidden');
+    _rejectId = null;
+}
+
+// ─── Status changes ────────────────────────────────────────────────────────
+function setStatus(id, newStatus) {
+    const r = allRequests.find(x => x.id === id);
+    if (!r) return;
+    r.status = newStatus;
+    saveStatus(id, newStatus);
+    fetch('/api/save', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ requests: allRequests })
+    }).catch(() => {});
+    updateStats();
+    renderRequests();
+    const names = { accepted: 'Accepted', inprogress: 'In Progress', completed: 'Completed', rejected: 'Rejected' };
+    showToast(`Status changed to ${names[newStatus] || newStatus}`);
+}
+
+// ─── Copy story ─────────────────────────────────────────────────────────────
+function copyStory(id) {
+    const r = allRequests.find(x => x.id === id);
+    if (!r || !r.generatedStory) return;
+    copyToClipboard(r.generatedStory);
+}
+
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        showToast('Story copied to clipboard!', 'success');
+    }).catch(() => {
+        showToast('Copy failed — try selecting all (Ctrl+A) and copying manually', 'error');
+    });
+}
+
+// ─── Persistence ─────────────────────────────────────────────────────────────
+function saveStatus(id, status, note) {
+    const saved = JSON.parse(localStorage.getItem('fr_statuses') || '{}');
+    saved[id] = status;
+    if (note !== undefined) saved[id + '_note'] = note;
+    localStorage.setItem('fr_statuses', JSON.stringify(saved));
+}
+
+// ─── Utilities ───────────────────────────────────────────────────────────────
+function escHtml(str) {
+    if (!str) return '';
+    const d = document.createElement('div');
+    d.textContent = str;
+    return d.innerHTML;
+}
+
+function formatDate(iso) {
+    if (!iso) return '';
+    return new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+function timeAgo(iso) {
+    if (!iso) return '';
+    const diff = Date.now() - new Date(iso).getTime();
+    const mins = Math.floor(diff / 60000);
+    if (mins < 1) return 'just now';
+    if (mins < 60) return mins + 'm ago';
+    const hrs = Math.floor(mins / 60);
+    if (hrs < 24) return hrs + 'h ago';
+    return formatDate(iso);
+}
+
+// ─── Toast ──────────────────────────────────────────────────────────────────
+function showToast(msg, type = 'success') {
+    const container = document.getElementById('toastContainer');
+    const el = document.createElement('div');
+    el.style.cssText = 'display:flex;align-items:center;gap:0.75rem;padding:0.85rem 1.1rem;background:white;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.15);font-size:0.875rem;min-width:240px;animation:slideUp 0.2s ease';
+    el.innerHTML = `
+        <i class="fa-solid fa-${type==='error'?'exclamation-circle':'check-circle'}" style="color:${type==='error'?'#dc2626':'#10b981'};font-size:1.1rem;flex-shrink:0;"></i>
+        <span style="flex:1;color:var(--text-dark);">${escHtml(msg)}</span>
+    `;
+    container.appendChild(el);
+    setTimeout(() => { el.style.opacity='0'; el.style.transform='translateY(10px)'; el.style.transition='all 0.3s'; setTimeout(()=>el.remove(), 300); }, 4000);
+}
+
+// ─── Manual instruction banner (persistent in-page notice) ─────────────────
+let _bannerId = 0;
+function showBannerNote(html) {
+    const existing = document.getElementById('banner-' + _bannerId);
+    if (existing) existing.remove();
+
+    const banner = document.createElement('div');
+    banner.id = 'banner-' + _bannerId;
+    banner.className = 'manual-banner warning dismissible';
+    banner.style.cssText = 'position:fixed;bottom:5rem;right:1.5rem;max-width:380px;z-index:998;box-shadow:0 4px 20px rgba(0,0,0,0.12);';
+    banner.innerHTML = `
+        <i class="fa-solid fa-clipboard-list" style="font-size:1.1rem;flex-shrink:0;margin-top:0.1rem;"></i>
+        <div style="flex:1;">${html}</div>
+        <button class="banner-dismiss" onclick="this.closest('.manual-banner').remove()">&times;</button>
+    `;
+    document.body.appendChild(banner);
+    _bannerId++;
+}
+
+// Add slideUp animation
+const style = document.createElement('style');
+style.textContent = '@keyframes slideUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }';
+document.head.appendChild(style);
+</script>
 </body>
 </html>
